@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tastyigniter-app
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: tastyigniter
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      APP_URL: https://mydomain.com
+    depends_on:
+      - db
+    expose:
+      - "9000"
+    command: >
+      sh -c "
+      composer install --no-dev --optimize-autoloader &&
+      php artisan igniter:install --no-interaction &&
+      php-fpm"
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    container_name: tastyigniter-nginx
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./app:/var/www/html
+    restart: always
+
+  db:
+    image: mariadb:10.5
+    container_name: tastyigniter-db
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: tastyigniter
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    restart: always

@@ -136,4 +136,4 @@ Shows real-time logs from the application.
 ---
 
 ## **📄 License**
-This project follows the **MIT License** as per [TastyIgniter's licensing](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE).
+This project follows the **MIT License** as per [TastyIgniter's licensing](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt).

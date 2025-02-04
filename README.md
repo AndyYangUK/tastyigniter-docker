@@ -30,27 +30,7 @@ Alternatively, you can manually **download** the latest release from:
 
 ---
 
-### **3️⃣ Configure `.env` File**
-TastyIgniter requires a **.env** file for configuration.  
-Navigate to the `app` folder and create the `.env` file from the example template:
-```bash
-cd app
-cp .env.example .env
-```
-
-Edit the `.env` file and set the **database credentials** (must match `docker-compose.yml`):
-```env
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=tastyigniter
-DB_USERNAME=root
-DB_PASSWORD=secret
-```
-
----
-
-### **4️⃣ Build and Run the Containers**
+### **3️⃣ Build and Run the Containers**
 Go back to the `tastyigniter-docker` root directory and start the containers:
 ```bash
 cd ..
@@ -63,7 +43,7 @@ This will:
 
 ---
 
-### **5️⃣ Install Dependencies and Setup TastyIgniter**
+### **4️⃣ Install Dependencies and Setup TastyIgniter**
 Run the following command inside the `app` container:
 ```bash
 docker exec -it tastyigniter-app bash -c "
@@ -81,7 +61,7 @@ php artisan view:clear"
 
 ---
 
-### **6️⃣ Access the Application**
+### **5️⃣ Access the Application**
 Once setup is complete, you can access **TastyIgniter** in your browser:
 
 **Admin Panel:**  
@@ -99,9 +79,9 @@ Replace `newpassword` with your desired password.
 
 ---
 
-### **7️⃣ (Optional) Configure a Reverse Proxy**
-If you are running this behind an **Nginx/Apache reverse proxy**, ensure you set the correct `APP_URL` in `.env`:
-```env
+### **6️⃣ (Optional) Configure a Reverse Proxy**
+If you are running this behind an **Nginx/Apache reverse proxy**, ensure you set the correct `APP_URL` in the environment variable:
+```docker-compose.yml
 APP_URL=https://yourdomain.com
 ```
 And restart the containers:

@@ -3,9 +3,11 @@ version: '3.8'
 services:
   app:
     build: .
+    restart: always
     environment:
       - APP_NAME=TastyIgniter
       - APP_ENV=production
+      - APP_KEY=${APP_KEY:-base64:uS68OnYp5X4h9XvR8Z3YQy1W2e3R4t5Y6u7I8o9P0aA=} # Default fallback
       - APP_URL=${COOLIFY_URL}
       - DB_CONNECTION=mysql
       - DB_HOST=db
@@ -18,15 +20,22 @@ services:
       - tasty_extensions:/var/www/html/extensions
       - tasty_themes:/var/www/html/themes
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: mariadb:10.11
+    restart: always
     environment:
       - MYSQL_DATABASE=tastyigniter
       - MYSQL_USER=igniter
       - MYSQL_PASSWORD=${SERVICE_PASSWORD_MYSQL}
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - mysql_data:/var/lib/mysql
 

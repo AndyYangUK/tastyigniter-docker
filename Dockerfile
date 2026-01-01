@@ -4,13 +4,22 @@ FROM php:8.3-apache
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libwebp-dev libfreetype6-dev \
     libzip-dev libxml2-dev libicu-dev libonig-dev \
+    libcurl4-openssl-dev \
     curl unzip git && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions 
-# (Removed openssl and ctype as they are built-in)
+# Install PHP extensions
+# Removed curl, openssl, and ctype as they are built-in to the base image
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) \
-    bcmath curl dom exif gd intl mbstring mysqli pdo_mysql tokenizer xml zip
+    bcmath \
+    dom \
+    exif \
+    gd \
+    intl \
+    mbstring \
+    mysqli \
+    pdo_mysql \
+    zip
 
 # Enable Apache rewrite
 RUN a2enmod rewrite
@@ -21,7 +30,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Download TastyIgniter v4
-# Added --no-interaction and --prefer-dist for stability
 RUN composer create-project tastyigniter/tastyigniter . --no-interaction --prefer-dist
 
 # Set permissions

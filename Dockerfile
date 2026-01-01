@@ -32,6 +32,8 @@ WORKDIR /var/www/html
 # Download TastyIgniter v4
 RUN composer create-project tastyigniter/tastyigniter . --no-interaction --prefer-dist
 
+RUN php artisan storage:link
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache

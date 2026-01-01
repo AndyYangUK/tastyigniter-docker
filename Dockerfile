@@ -36,6 +36,10 @@ RUN composer create-project tastyigniter/tastyigniter . --no-interaction --prefe
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Update Apache DocumentRoot to point to /public
+RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/defaults!/var/www/html/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
 EXPOSE 80
 
 CMD ["apache2-foreground"]

@@ -6,10 +6,11 @@ RUN apt-get update && apt-get install -y \
     libzip-dev libxml2-dev libicu-dev libonig-dev \
     curl unzip git && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
+# Install PHP extensions 
+# (Removed openssl and ctype as they are built-in)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) \
-    bcmath ctype curl dom exif gd intl mbstring mysqli openssl pdo_mysql tokenizer xml zip
+    bcmath curl dom exif gd intl mbstring mysqli pdo_mysql tokenizer xml zip
 
 # Enable Apache rewrite
 RUN a2enmod rewrite
@@ -19,8 +20,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Option 1 Core Logic: Download TastyIgniter v4 directly
-RUN composer create-project tastyigniter/tastyigniter .
+# Download TastyIgniter v4
+# Added --no-interaction and --prefer-dist for stability
+RUN composer create-project tastyigniter/tastyigniter . --no-interaction --prefer-dist
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
